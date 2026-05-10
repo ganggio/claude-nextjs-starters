@@ -5,21 +5,51 @@ Next.js 16 + React 19 + Tailwind CSS v4 + shadcn/ui(radix-nova) 기반의 모던
 
 ## 기술 스택
 
-| 영역          | 라이브러리                             |
-| ------------- | -------------------------------------- |
-| 프레임워크    | Next.js 16 (App Router, Turbopack)     |
-| 라이브러리    | React 19                               |
-| 언어          | TypeScript (strict)                    |
-| 스타일        | Tailwind CSS v4 (`@theme inline`)      |
-| UI 컴포넌트   | shadcn/ui (radix-nova) + radix-ui      |
-| 아이콘        | lucide-react                           |
-| 테마          | next-themes                            |
-| 토스트        | sonner                                 |
-| 데이터 테이블 | @tanstack/react-table v8               |
-| 폼            | react-hook-form + zod v4               |
-| 명령 팔레트   | cmdk                                   |
-| 날짜          | date-fns                               |
-| 공통 훅       | usehooks-ts                            |
+> **한 줄 요약** — Next 16 + React 19 + Tailwind v4 + shadcn(radix-nova) 위에 RHF/Zod, TanStack Table, cmdk, sonner를 얹은 모던 대시보드 스타터킷.
+
+### 핵심 프레임워크
+
+| 영역       | 라이브러리                          |
+| ---------- | ----------------------------------- |
+| 프레임워크 | Next.js 16 (App Router, Turbopack)  |
+| 라이브러리 | React 19                            |
+| 언어       | TypeScript (strict)                 |
+
+### 스타일 & UI
+
+| 영역          | 라이브러리                                       |
+| ------------- | ------------------------------------------------ |
+| 스타일        | Tailwind CSS v4 (`@theme inline`)                |
+| 애니메이션    | tw-animate-css                                   |
+| 클래스 유틸   | class-variance-authority + clsx + tailwind-merge |
+| UI 컴포넌트   | shadcn/ui (radix-nova) + radix-ui                |
+| 아이콘        | lucide-react                                     |
+| 테마          | next-themes                                      |
+
+### 폼 & 검증
+
+| 영역      | 라이브러리                                    |
+| --------- | --------------------------------------------- |
+| 폼 상태   | react-hook-form                               |
+| 스키마    | zod v4                                        |
+| 리졸버    | @hookform/resolvers                           |
+
+### 데이터 & 상호작용
+
+| 영역          | 라이브러리                |
+| ------------- | ------------------------- |
+| 데이터 테이블 | @tanstack/react-table v8  |
+| 명령 팔레트   | cmdk                      |
+| 토스트        | sonner                    |
+| 날짜          | date-fns (ko 로케일)      |
+| 공통 훅       | usehooks-ts               |
+
+### 개발 도구
+
+| 영역    | 라이브러리                                          |
+| ------- | --------------------------------------------------- |
+| 린터    | ESLint (eslint-config-next)                         |
+| 브라우저 검증 | Playwright MCP (`.mcp.json`에 등록, Claude Code 전용) |
 
 ## 프로젝트 구조
 

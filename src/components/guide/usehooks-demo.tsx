@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   useDebounceValue,
+  useIsClient,
   useLocalStorage,
   useMediaQuery,
   useToggle,
@@ -28,6 +29,10 @@ const COUNTER_KEY = "guide-demo-counter";
  * - useToggle: boolean 토글
  */
 export function UseHooksDemo() {
+  // useMediaQuery는 SSR 시 defaultValue(false)를 반환하지만 클라이언트 첫 렌더에서 즉시
+  // window.matchMedia 결과를 사용해 mismatch가 발생한다. useIsClient 가드로 마운트 전에는
+  // 일관된 placeholder를 그려 hydration 경고를 방지한다.
+  const isClient = useIsClient();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const [query, setQuery] = useState("");
@@ -44,7 +49,13 @@ export function UseHooksDemo() {
           useMediaQuery
         </p>
         <div className="flex items-center gap-2">
-          {isDesktop ? (
+          {!isClient ? (
+            // 마운트 전: 서버/클라이언트 첫 렌더가 동일하도록 고정 placeholder
+            <>
+              <Monitor className="size-4 opacity-50" />
+              <Badge variant="outline">감지 중...</Badge>
+            </>
+          ) : isDesktop ? (
             <>
               <Monitor className="size-4" />
               <Badge>데스크탑 (≥ 1024px)</Badge>

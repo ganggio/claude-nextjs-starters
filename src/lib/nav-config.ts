@@ -6,6 +6,11 @@ import {
   Settings,
   CircleHelp,
   ExternalLink,
+  BookOpen,
+  Layers,
+  Inbox,
+  Package,
+  Bell,
 } from "lucide-react";
 
 import type { NavGroup, NavItem } from "@/types";
@@ -42,6 +47,41 @@ export const sidebarNav: NavGroup[] = [
         title: "모달 데모",
         href: "/modals",
         icon: MessageSquare,
+      },
+    ],
+  },
+  {
+    title: "가이드",
+    items: [
+      {
+        title: "시작하기",
+        href: "/guide",
+        icon: BookOpen,
+      },
+      {
+        title: "컴포넌트",
+        href: "/guide/components",
+        icon: Layers,
+      },
+      {
+        title: "폼",
+        href: "/guide/forms",
+        icon: FileText,
+      },
+      {
+        title: "데이터 표시",
+        href: "/guide/data-display",
+        icon: Package,
+      },
+      {
+        title: "피드백",
+        href: "/guide/feedback",
+        icon: Bell,
+      },
+      {
+        title: "라이브러리",
+        href: "/guide/libraries",
+        icon: Inbox,
       },
     ],
   },

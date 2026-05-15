@@ -159,11 +159,85 @@ export default async function Page({ params }: PageProps) {
 
 장황한 사용 설명은 금지. 변경사항 + 다음 행동만.
 
-## 인자 예시
+## 케이스별 사용 예시
+
+각 케이스는 "어떤 상황에서 쓰는지 → 명령 → 무엇이 일어나는지" 순서로 정리합니다. 의도와 결과를 함께 보고 가장 가까운 케이스를 골라 쓰세요.
+
+### Case 1. 사이드바에 노출되는 새 대시보드 페이지
+
+상황: 좌측 사이드바와 Cmd+K 팔레트에 함께 등장하는 일반 정적 페이지를 추가할 때.
 
 ```
 /add-page dashboard reports --nav "리포트" --icon BarChart3 --group 관리
+```
+
+생성/수정:
+- `src/app/(dashboard)/reports/page.tsx` 신규 — `PageHeader` + 빈 `Card` 셸, `metadata.title = "리포트"`
+- `src/lib/nav-config.ts` 수정 — `BarChart3` 아이콘 import 추가 + `관리` 그룹 `items` 끝에 `{ title: "리포트", href: "/reports", icon: BarChart3 }` 추가
+
+검증 포인트: `/dashboard` 진입 시 사이드바에 "리포트"가 보이고, Cmd+K로 "리포트" 검색 시 동일 항목이 잡혀야 함.
+
+### Case 2. 상세 페이지 (dynamic segment)
+
+상황: 목록 페이지 → 상세 페이지로 들어가는 `/<resource>/[id]` 라우트. 사이드바에는 노출하지 않음.
+
+```
 /add-page dashboard reports/[id]
+```
+
+생성/수정:
+- `src/app/(dashboard)/reports/[id]/page.tsx` 신규 — `params: Promise<{ id: string }>` 타입, `generateMetadata` + 페이지 함수 모두 `await params`, `notFound` import 포함(주석으로 사용처 안내)
+- `src/lib/nav-config.ts` **수정 없음** — dynamic segment 포함 라우트는 컨벤션상 사이드바 등록 대상 아님
+
+검증 포인트: `/reports/abc` 같은 임의 경로 진입 시 404 분기를 활성화하면 not-found가 정상 노출돼야 함(데이터 소스 연결 후).
+
+### Case 3. 중첩 경로 + 별도 nav 그룹
+
+상황: `설정` 하위에 들어가는 페이지처럼 중첩 경로지만 사이드바에는 단일 항목으로 노출하고 싶을 때.
+
+```
 /add-page dashboard settings/api-keys --nav "API 키" --icon Key --group 기타
+```
+
+생성/수정:
+- `src/app/(dashboard)/settings/api-keys/page.tsx` 신규 — 일반 정적 페이지 셸
+- `src/lib/nav-config.ts` 수정 — `Key` 아이콘 import + `기타` 그룹에 `{ title: "API 키", href: "/settings/api-keys", icon: Key }` 추가
+
+주의: `href`는 dynamic segment를 만나기 전까지의 전체 경로를 그대로 사용합니다. 중간 segment를 임의로 줄이지 마세요.
+
+### Case 4. 인증 화면 (auth 그룹)
+
+상황: 로그인/회원가입과 같은 결의 미니멀 셸 페이지. 사이드바와 무관.
+
+```
 /add-page auth verify-email
 ```
+
+생성/수정:
+- `src/app/(auth)/verify-email/page.tsx` 신규 — `PageHeader` 없이 `Card` + `CardHeader`(타이틀/설명) + `CardContent`(폼 자리). RHF + Zod를 쓸 경우 스키마 위치(`src/lib/validations/auth.ts`) 안내 한 줄.
+- `src/lib/nav-config.ts` **수정 없음** — auth 라우트는 사이드바 대상 아님
+
+`--nav` 옵션이 같이 들어와도 무시됩니다. 그 사실은 출력 요약에서 한 줄로 알립니다.
+
+### Case 5. nav 등록 없이 임시/숨김 대시보드 페이지
+
+상황: 메뉴에 노출하지 않고 직접 URL로만 접근할 페이지(내부 디버그 화면 등).
+
+```
+/add-page dashboard internal/debug
+```
+
+생성/수정:
+- `src/app/(dashboard)/internal/debug/page.tsx` 신규 — 정적 셸
+- `src/lib/nav-config.ts` **수정 없음** — `--nav` 미지정이므로 등록 단계 자체를 건너뜀
+
+이 경우 출력 요약의 "nav 수정 여부"에 "옵션 미지정으로 스킵"이라고 명시합니다.
+
+### 동작하지 않는(거절되어야 하는) 입력
+
+다음은 추측으로 진행하지 않고 즉시 사용자에게 되묻거나 중단해야 하는 케이스입니다.
+
+- 그룹이 `dashboard`/`auth` 외 값일 때 → 중단
+- 대상 경로 파일이 이미 존재할 때 → 덮어쓰지 않고 알림만
+- `--icon`이 lucide-react에 존재하지 않는 이름일 때 → 사용자에게 대체 아이콘을 묻기
+- dynamic segment(`[id]` 등)가 포함된 경로에 `--nav`가 함께 들어왔을 때 → 페이지는 생성하되 nav 등록은 스킵하고 그 사실을 한 줄로 알림

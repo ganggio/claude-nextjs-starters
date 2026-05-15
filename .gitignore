@@ -33,6 +33,9 @@ yarn-error.log*
 # Playwright MCP 자동 생성 산출물 (콘솔 로그/스냅샷)
 /.playwright-mcp/
 
+# Claude Code 개인 로컬 설정 (프로젝트 공용 설정은 .claude/commands/ 등 별도 파일)
+.claude/settings.local.json
+
 # env files (can opt-in for committing if needed)
 .env*
 

@@ -35,6 +35,10 @@ yarn-error.log*
 
 # Claude Code 개인 로컬 설정 (프로젝트 공용 설정은 .claude/commands/ 등 별도 파일)
 .claude/settings.local.json
+.claude/settings.local.json.bak.*
+# Claude Code Slack 알림 hook (로컬 전용)
+.claude/hooks/
+.claude/state/
 
 # env files (can opt-in for committing if needed)
 .env*
